@@ -8,6 +8,88 @@ window.onload = function() {
   var context = new AudioContext();
 }
 </script>
+
+<script>/* lazyload.js (c) Lorenzo Giuliani
+ * MIT License (http://www.opensource.org/licenses/mit-license.html)
+ *
+ * expects a list of:  
+ * `<img src="blank.gif" data-src="my_image.png" width="600" height="400" class="lazy">`
+ */
+
+!function(window){
+  var $q = function(q, res){
+        if (document.querySelectorAll) {
+          res = document.querySelectorAll(q);
+        } else {
+          var d=document
+            , a=d.styleSheets[0] || d.createStyleSheet();
+          a.addRule(q,'f:b');
+          for(var l=d.all,b=0,c=[],f=l.length;b<f;b++)
+            l[b].currentStyle.f && c.push(l[b]);
+
+          a.removeRule(0);
+          res = c;
+        }
+        return res;
+      }
+    , addEventListener = function(evt, fn){
+        window.addEventListener
+          ? this.addEventListener(evt, fn, false)
+          : (window.attachEvent)
+            ? this.attachEvent('on' + evt, fn)
+            : this['on' + evt] = fn;
+      }
+    , _has = function(obj, key) {
+        return Object.prototype.hasOwnProperty.call(obj, key);
+      }
+    ;
+
+  function loadImage (el, fn) {
+    var img = new Image()
+      , src = el.getAttribute('data-src');
+    img.onload = function() {
+      if (!! el.parent)
+        el.parent.replaceChild(img, el)
+      else
+        el.src = src;
+
+      fn? fn() : null;
+    }
+    img.src = src;
+  }
+
+  function elementInViewport(el) {
+    var rect = el.getBoundingClientRect()
+
+    return (
+       rect.top    >= 0
+    && rect.left   >= 0
+    && rect.top <= (window.innerHeight || document.documentElement.clientHeight)
+    )
+  }
+
+    var images = new Array()
+      , query = $q('img.lazy')
+      , processScroll = function(){
+          for (var i = 0; i < images.length; i++) {
+            if (elementInViewport(images[i])) {
+              loadImage(images[i], function () {
+                images.splice(i, i);
+              });
+            }
+          };
+        }
+      ;
+    // Array.prototype.slice.call is not callable under our lovely IE8 
+    for (var i = 0; i < query.length; i++) {
+      images.push(query[i]);
+    };
+
+    processScroll();
+    addEventListener('scroll',processScroll);
+
+}(this);</script>
+
 <script>
 // Set a valid end date
 var countDownDate = new Date("Jan 28, 2021 09:00:00").getTime();
@@ -164,11 +246,11 @@ margin:-1%;padding-top:30%;padding-bottom:30%;background:#444444;}
 <div class="kedua">
   <h2>بِسْمِ اللّهِ الرَّحْمَنِ الرَّحِيْمِ</h2>
   <p id="married">We are Getting Married</p><br/><br/><br/>
-  <img src="https://suspicious-ride-59c73c.netlify.app/undangan/sample/IMG_20210122_221801.jpg"/><br/><br/>
+  <img src="https://suspicious-ride-59c73c.netlify.app/undangan/sample/IMG_20210122_221801.jpg" class="lazy"/><br/><br/>
   <p id="nama1" style="font-family: 'Kaushan Script', cursive;font-size:9.3vw !important;">Anita</p>
   <p id="ortu">Putri dari Bpk. Tukadi & Ibu Karni</p>
   <p id="and" style="font-size:20vw !important;font-family: 'Kaushan Script', cursive;">&</p>
-  <img src="https://suspicious-ride-59c73c.netlify.app/undangan/sample/FB_IMG_16113283025639570.jpg"/>
+  <img src="https://suspicious-ride-59c73c.netlify.app/undangan/sample/FB_IMG_16113283025639570.jpg" class="lazy"/>
   <p id="nama2" style="font-size:9.3vw !important;font-family: 'Kaushan Script', cursive;">Alim Prihatin</p>
   <p id="ortu">Putra dari Bpk. Darsoni (Alm) & Ibu Nasem</p>
 </div>
@@ -196,10 +278,10 @@ margin:-1%;padding-top:30%;padding-bottom:30%;background:#444444;}
 <div class="kelima">
   <h2>Love Story</h2><br/><br/>
   <h3 style="margin-left:15%;margin-right:15%;font-size:5vw;padding-bottom:10px;border-bottom:solid 20px white;">First Meet</h3><br/>
-  <img src="https://suspicious-ride-59c73c.netlify.app/undangan/sample/firstmeet.jpg" style="filter:grayscale(100%);width:90% !important;border-radius:20px;"/><br/><br/>
+  <img src="https://suspicious-ride-59c73c.netlify.app/undangan/sample/firstmeet.jpg" style="filter:grayscale(100%);width:90% !important;border-radius:20px;" class="lazy"/><br/><br/>
   <p id="firstmeet">Awal pertemuan kita membuat warna dalam hidup untuk saling menghias kehidupan</p><br/><br/>
   <h3 style="margin-left:15%;margin-right:15%;font-size:5vw;padding-bottom:10px;border-bottom:solid 20px white;">The Engagement</h3><br/>
-  <img src="https://suspicious-ride-59c73c.netlify.app/undangan/sample/IMG_0021.jpg" style="filter:grayscale(100%);width:90% !important;border-radius:20px;"/><br/><br/>
+  <img src="https://suspicious-ride-59c73c.netlify.app/undangan/sample/IMG_0021.jpg" style="filter:grayscale(100%);width:90% !important;border-radius:20px;" class="lazy"/><br/><br/>
   <p id="engagement">08 November 2020 kami melaksanakan akad nikah di rumah pengantin wanita</p>
                                                  <br/><br/>
                                                     </div>                                                  
